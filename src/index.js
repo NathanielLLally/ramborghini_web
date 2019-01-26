@@ -1,99 +1,38 @@
-import React from "react";
-import { render } from "react-dom";
-import { makeData, Logo, Tips } from "./Utils";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
 
-// Import React Table
-import ReactTable from "react-table";
-import "react-table/react-table.css";
+import { DataTableReducer } from 'react-redux-datatable';
+import DataTable from 'react-redux-datatable';
+import 'react-redux-datatable/dist/styles.css';
 
-const columns = [
-  {
-    Header: "Name",
-    columns: [
-      {
-        Header: "First Name",
-        accessor: "firstName"
-      },
-      {
-        Header: "Last Name",
-        id: "lastName",
-        accessor: d => d.lastName
-      }
-    ]
-  },
-  {
-    Header: "Info",
-    columns: [
-      {
-        Header: "Age",
-        accessor: "age"
-      },
-      {
-        Header: "Status",
-        accessor: "status"
-      }
-    ]
-  },
-  {
-    Header: "Stats",
-    columns: [
-      {
-        Header: "Visits",
-        accessor: "visits"
-      }
-    ]
-  }
-];
+const apiLocation = 'http://localhost:8080/data';
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      data: makeData()
-    };
-  }
-  render() {
-    const { data } = this.state;
-    return (
-      <div>
-        <ReactTable
-          data={data}
-          columns={columns}
-          defaultPageSize={10}
-          className="-striped -highlight"
-          SubComponent={row => {
-            return (
-              <div style={{ padding: "20px" }}>
-                <em>
-                  You can put any component you want here, even another React
-                  Table!
-                </em>
-                <br />
-                <br />
-                <ReactTable
-                  data={data}
-                  columns={columns}
-                  defaultPageSize={3}
-                  showPagination={false}
-                  SubComponent={row => {
-                    return (
-                      <div style={{ padding: "20px" }}>
-                        Another Sub Component!
-                      </div>
-                    );
-                  }}
-                />
-              </div>
-            );
-          }}
-        />
-        <br />
-        <Tips />
-        <Logo />
-      </div>
-    );
-  }
-}
+const tableSettings = {
+    tableID: 'DataTable',
+    keyField: 'ref_id',
+    tableColumns: [
+        {
+            title: 'Ref',
+            key: 'ref_id',
+            filter: 'NumberFilter',
+            defaultValue: { comparator: '=' },
+        },
+        {
+            title: 'Category',
+            key: 'categoryid',
+        },
+    ],
+};
 
-render(<App />, document.getElementById("root"));
+ReactDOM.render(<DataTable 
+  tableSettings={tableSettings}
+  apiLocation={apiLocation}
+  />, document.getElementById('root'));
 
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
+serviceWorker.unregister();
